@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'FlightDelay.AI — Prédiction de retards',
+  title: 'FlightDelay — Prédiction de retards',
   description: 'Système ML de prédiction de retards de vols',
 }
 
@@ -14,14 +14,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav style={{
           borderBottom: '1px solid var(--border)',
           background: 'var(--panel)',
-          padding: '0 2rem',
+          padding: '0 1.5rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           height: '56px',
           position: 'sticky',
           top: 0,
-          zIndex: 100
+          zIndex: 100,
+          flexWrap: 'wrap',
+          gap: '0.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span style={{ fontSize: '1.5rem' }}>✈</span>
@@ -29,11 +31,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               FLIGHTDELAY
             </span>
           </div>
-          <div style={{ display: 'flex', gap: '2rem' }} className="mono">
-            <a href="/" style={{ color: 'var(--text)', fontSize: '0.8rem', textDecoration: 'none' }}>TABLEAU</a>
-            <a href="/predict" style={{ color: 'var(--text)', fontSize: '0.8rem', textDecoration: 'none' }}>PRÉDICTION</a>
-            <a href="/live" style={{ color: 'var(--text)', fontSize: '0.8rem', textDecoration: 'none' }}>LIVE</a>
-            <a href="/data" style={{ color: 'var(--text)', fontSize: '0.8rem', textDecoration: 'none' }}>DONNÉES</a>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }} className="mono">
+            {[
+              { href: '/', label: 'TABLEAU' },
+              { href: '/predict', label: 'PRÉDICTION' },
+              { href: '/live', label: 'LIVE' },
+              { href: '/data', label: 'DONNÉES' }
+            ].map(link => (
+              <a key={link.href} href={link.href} style={{
+                color: 'var(--text)',
+                fontSize: '0.8rem',
+                textDecoration: 'none',
+                padding: '0.25rem 0',
+                letterSpacing: '1px'
+              }}>
+                {link.label}
+              </a>
+            ))}
           </div>
         </nav>
         <main>{children}</main>
