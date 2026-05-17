@@ -114,3 +114,11 @@ body {
   #desktop-table { display: none !important; }
   #mobile-cards { display: block; }
 }
+
+#data-desktop, #weather-desktop { display: block; }
+#data-mobile, #weather-mobile { display: none; }
+
+@media (max-width: 768px) {
+  #data-desktop, #weather-desktop { display: none !important; }
+  #data-mobile, #weather-mobile { display: block; }
+}
