@@ -105,3 +105,4 @@ body {
 @media (max-width: 640px) {
   .page-pad { padding: 1rem; }
 }
+.fids-row:last-child { border-bottom: none; }
