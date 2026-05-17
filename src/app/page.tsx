@@ -57,20 +57,20 @@ export default function Home() {
           <h1 className="display" style={{ fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: 'var(--amber)', letterSpacing: '4px', lineHeight: 1 }}>
             DÉPARTS
           </h1>
-          <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.7rem', marginTop: '0.25rem' }}>
+          <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.65rem', marginTop: '0.25rem' }}>
             FLIGHT INFORMATION DISPLAY SYSTEM
           </p>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div className="display" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: 'var(--amber)' }}>{time}</div>
-          <div className="mono" style={{ fontSize: '0.65rem', color: 'var(--muted)' }}>
+          <div className="mono" style={{ fontSize: '0.6rem', color: 'var(--muted)' }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase()}
           </div>
         </div>
       </div>
 
-      {/* Tableau scrollable */}
-      <div className="panel table-scroll" style={{ borderRadius: '4px' }}>
+      {/* Desktop table */}
+      <div className="panel table-scroll" style={{ borderRadius: '4px', display: 'none' }} id="desktop-table">
         <div className="mono" style={{
           display: 'grid',
           gridTemplateColumns: '90px 1fr 70px 70px 70px 130px 120px',
@@ -84,19 +84,6 @@ export default function Home() {
         }}>
           <span>VOL</span><span>COMPAGNIE</span><span>DEP</span><span>ARR</span><span>PRÉVU</span><span>STATUT</span><span>ACTION</span>
         </div>
-
-        {loading && (
-          <div className="mono" style={{ padding: '3rem', textAlign: 'center', color: 'var(--muted)' }}>
-            <span className="blink">CHARGEMENT...</span>
-          </div>
-        )}
-
-        {!loading && flights.length === 0 && (
-          <div className="mono" style={{ padding: '3rem', textAlign: 'center', color: 'var(--muted)' }}>
-            AUCUN VOL DISPONIBLE
-          </div>
-        )}
-
         {flights.map((f, i) => (
           <div key={i} className="fids-row mono" style={{
             display: 'grid',
@@ -107,7 +94,7 @@ export default function Home() {
             alignItems: 'center'
           }}>
             <span style={{ color: 'var(--amber)', fontWeight: 'bold' }}>{f.flight?.iata || '—'}</span>
-            <span style={{ color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.airline?.name || '—'}</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.airline?.name || '—'}</span>
             <span>{f.departure?.iata}</span>
             <span>{f.arrival?.iata}</span>
             <span style={{ color: 'var(--muted)' }}>{formatTime(f.departure?.scheduled)}</span>
@@ -115,17 +102,41 @@ export default function Home() {
               {statusLabel(f.flight_status, f.departure?.delay)}
             </span>
             <a href={`/predict?flight=${f.flight?.iata}&dep=${f.departure?.iata}&arr=${f.arrival?.iata}&airline=${f.airline?.iata}`}
-              style={{
-                display: 'inline-block',
-                padding: '0.2rem 0.6rem',
-                border: '1px solid var(--amber-dim)',
-                color: 'var(--amber)',
-                fontSize: '0.65rem',
-                textDecoration: 'none',
-                letterSpacing: '1px'
-              }}>
+              style={{ display: 'inline-block', padding: '0.2rem 0.6rem', border: '1px solid var(--amber-dim)', color: 'var(--amber)', fontSize: '0.65rem', textDecoration: 'none' }}>
               PRÉDIRE →
             </a>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile cards */}
+      <div id="mobile-cards">
+        {loading && (
+          <div className="mono panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)', borderRadius: '4px' }}>
+            <span className="blink">CHARGEMENT...</span>
+          </div>
+        )}
+        {flights.map((f, i) => (
+          <div key={i} className="panel" style={{ borderRadius: '4px', marginBottom: '0.75rem', padding: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span className="mono display" style={{ fontSize: '1.2rem', color: 'var(--amber)' }}>{f.flight?.iata || '—'}</span>
+              <span className="mono" style={{ fontSize: '0.75rem', color: statusColor(f.flight_status, f.departure?.delay) }}>
+                {statusLabel(f.flight_status, f.departure?.delay)}
+              </span>
+            </div>
+            <div className="mono" style={{ fontSize: '0.8rem', color: 'var(--text)', marginBottom: '0.5rem' }}>{f.airline?.name}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="mono" style={{ fontSize: '0.9rem' }}>
+                <span style={{ color: 'var(--amber)' }}>{f.departure?.iata}</span>
+                <span style={{ color: 'var(--muted)', margin: '0 0.5rem' }}>→</span>
+                <span style={{ color: 'var(--amber)' }}>{f.arrival?.iata}</span>
+                <span style={{ color: 'var(--muted)', marginLeft: '0.75rem', fontSize: '0.75rem' }}>{formatTime(f.departure?.scheduled)}</span>
+              </div>
+              <a href={`/predict?flight=${f.flight?.iata}&dep=${f.departure?.iata}&arr=${f.arrival?.iata}&airline=${f.airline?.iata}`}
+                style={{ padding: '0.3rem 0.8rem', border: '1px solid var(--amber-dim)', color: 'var(--amber)', fontSize: '0.65rem', textDecoration: 'none', fontFamily: 'Share Tech Mono' }}>
+                PRÉDIRE →
+              </a>
+            </div>
           </div>
         ))}
       </div>
