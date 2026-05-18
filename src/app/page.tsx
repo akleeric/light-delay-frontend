@@ -69,8 +69,15 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Desktop table */}
-      <div className="panel table-scroll" style={{ borderRadius: '4px', display: 'none' }} id="desktop-table">
+      {loading && (
+        <div className="mono panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)', borderRadius: '4px', marginBottom: '1.5rem' }}>
+          <span className="blink">CHARGEMENT...</span>
+        </div>
+      )}
+
+      {/* Desktop — tableau */}
+      <div className="panel table-scroll" style={{ borderRadius: '4px', display: 'none' }}
+        ref={el => { if (el) el.style.display = window.innerWidth >= 768 ? 'block' : 'none' }}>
         <div className="mono" style={{
           display: 'grid',
           gridTemplateColumns: '90px 1fr 70px 70px 70px 130px 120px',
@@ -78,20 +85,14 @@ export default function Home() {
           padding: '0.6rem 1rem',
           background: 'rgba(245,166,35,0.08)',
           borderBottom: '1px solid var(--border)',
-          fontSize: '0.6rem',
-          color: 'var(--amber-dim)',
-          letterSpacing: '2px'
+          fontSize: '0.6rem', color: 'var(--amber-dim)', letterSpacing: '2px'
         }}>
           <span>VOL</span><span>COMPAGNIE</span><span>DEP</span><span>ARR</span><span>PRÉVU</span><span>STATUT</span><span>ACTION</span>
         </div>
         {flights.map((f, i) => (
           <div key={i} className="fids-row mono" style={{
-            display: 'grid',
-            gridTemplateColumns: '90px 1fr 70px 70px 70px 130px 120px',
-            minWidth: '700px',
-            padding: '0.8rem 1rem',
-            fontSize: '0.8rem',
-            alignItems: 'center'
+            display: 'grid', gridTemplateColumns: '90px 1fr 70px 70px 70px 130px 120px',
+            minWidth: '700px', padding: '0.8rem 1rem', fontSize: '0.8rem', alignItems: 'center'
           }}>
             <span style={{ color: 'var(--amber)', fontWeight: 'bold' }}>{f.flight?.iata || '—'}</span>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.airline?.name || '—'}</span>
@@ -109,16 +110,12 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Mobile cards */}
-      <div id="mobile-cards">
-        {loading && (
-          <div className="mono panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)', borderRadius: '4px' }}>
-            <span className="blink">CHARGEMENT...</span>
-          </div>
-        )}
+      {/* Mobile — cards */}
+      <div style={{ display: 'none' }}
+        ref={el => { if (el) el.style.display = window.innerWidth < 768 ? 'block' : 'none' }}>
         {flights.map((f, i) => (
           <div key={i} className="panel" style={{ borderRadius: '4px', marginBottom: '0.75rem', padding: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
               <span className="mono display" style={{ fontSize: '1.2rem', color: 'var(--amber)' }}>{f.flight?.iata || '—'}</span>
               <span className="mono" style={{ fontSize: '0.75rem', color: statusColor(f.flight_status, f.departure?.delay) }}>
                 {statusLabel(f.flight_status, f.departure?.delay)}
@@ -126,11 +123,11 @@ export default function Home() {
             </div>
             <div className="mono" style={{ fontSize: '0.8rem', color: 'var(--text)', marginBottom: '0.5rem' }}>{f.airline?.name}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div className="mono" style={{ fontSize: '0.9rem' }}>
+              <div className="mono" style={{ fontSize: '0.85rem' }}>
                 <span style={{ color: 'var(--amber)' }}>{f.departure?.iata}</span>
-                <span style={{ color: 'var(--muted)', margin: '0 0.5rem' }}>→</span>
+                <span style={{ color: 'var(--muted)', margin: '0 0.4rem' }}>→</span>
                 <span style={{ color: 'var(--amber)' }}>{f.arrival?.iata}</span>
-                <span style={{ color: 'var(--muted)', marginLeft: '0.75rem', fontSize: '0.75rem' }}>{formatTime(f.departure?.scheduled)}</span>
+                <span style={{ color: 'var(--muted)', marginLeft: '0.5rem', fontSize: '0.75rem' }}>{formatTime(f.departure?.scheduled)}</span>
               </div>
               <a href={`/predict?flight=${f.flight?.iata}&dep=${f.departure?.iata}&arr=${f.arrival?.iata}&airline=${f.airline?.iata}`}
                 style={{ padding: '0.3rem 0.8rem', border: '1px solid var(--amber-dim)', color: 'var(--amber)', fontSize: '0.65rem', textDecoration: 'none', fontFamily: 'Share Tech Mono' }}>

@@ -12,7 +12,6 @@
   --amber-dim: #8a5d13;
   --green: #00e676;
   --red: #ff1744;
-  --blue: #2979ff;
   --text: #e8e0d0;
   --muted: #4a6a8a;
 }
@@ -34,34 +33,17 @@ body {
   transition: background 0.2s;
 }
 .fids-row:hover { background: rgba(245, 166, 35, 0.04); }
+.fids-row:last-child { border-bottom: none; }
 
 .amber { color: var(--amber); }
 .panel { background: var(--panel); border: 1px solid var(--border); }
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-.blink { animation: blink 1.2s infinite; }
-
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-.scanline {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(transparent, rgba(245,166,35,0.08), transparent);
-  animation: scanline 4s linear infinite;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* Responsive table */
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.page-pad { padding: 1.5rem; }
 
-/* Responsive grid */
+@media (max-width: 640px) {
+  .page-pad { padding: 1rem; }
+}
+
 .grid-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -101,24 +83,22 @@ body {
   .grid-4col { grid-template-columns: 1fr; }
 }
 
-.page-pad { padding: 1.5rem; }
-@media (max-width: 640px) {
-  .page-pad { padding: 1rem; }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
-.fids-row:last-child { border-bottom: none; }
+.blink { animation: blink 1.2s infinite; }
 
-#desktop-table { display: block !important; }
-#mobile-cards { display: none !important; }
-
-@media (max-width: 768px) {
-  #desktop-table { display: none !important; }
-  #mobile-cards { display: block; }
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }
-
-#data-desktop, #weather-desktop { display: block; }
-#data-mobile, #weather-mobile { display: none; }
-
-@media (max-width: 768px) {
-  #data-desktop, #weather-desktop { display: none !important; }
-  #data-mobile, #weather-mobile { display: block; }
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(transparent, rgba(245,166,35,0.08), transparent);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
 }
