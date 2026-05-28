@@ -12,6 +12,7 @@ interface Flight {
 }
 
 interface Processed {
+  flight_iata: string
   airline_iata: string
   departure_iata: string
   arrival_iata: string
@@ -103,7 +104,7 @@ export default function Home() {
   // Merge flights + processed by airline+dep+arr
   const enriched = flights.map(f => {
     const proc = processed.find(p =>
-      p.airline_iata === f.airline?.iata &&
+      p.flight_iata === f.flight?.iata &&
       p.departure_iata === f.departure?.iata &&
       p.arrival_iata === f.arrival?.iata
     )

@@ -12,6 +12,7 @@ interface FlightRaw {
 }
 
 interface Processed {
+  flight_iata: string
   airline_iata: string
   departure_iata: string
   arrival_iata: string
@@ -76,7 +77,7 @@ function PredictContent() {
   useEffect(() => {
     if (!selected || processedList.length === 0) return
     const proc = processedList.find(p =>
-      p.airline_iata === selected.airline?.iata &&
+      p.flight_iata === selected.flight?.iata &&
       p.departure_iata === selected.departure?.iata &&
       p.arrival_iata === selected.arrival?.iata
     )
@@ -149,7 +150,7 @@ function PredictContent() {
   const riskLabel = result === null ? '—' : result > 60 ? 'RISQUE ÉLEVÉ' : result > 15 ? 'RETARD MODÉRÉ' : 'À L\'HEURE'
 
   const proc = selected ? processedList.find(p =>
-    p.airline_iata === selected.airline?.iata &&
+    p.flight_iata === selected.flight?.iata &&
     p.departure_iata === selected.departure?.iata &&
     p.arrival_iata === selected.arrival?.iata
   ) : null
