@@ -66,12 +66,20 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [predicting, setPredicting] = useState(false)
   const [time, setTime] = useState('')
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const tick = () => setTime(new Date().toLocaleTimeString('fr-FR'))
     tick()
     const t = setInterval(tick, 1000)
     return () => clearInterval(t)
+  }, [])
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
   useEffect(() => {
@@ -158,8 +166,7 @@ export default function Home() {
       )}
 
       {/* Desktop table */}
-      <div className="panel table-scroll" style={{ borderRadius: '4px', display: 'none' }}
-        ref={el => { if (el) el.style.display = window.innerWidth >= 768 ? 'block' : 'none' }}>
+      <div className="panel table-scroll" style={{ borderRadius: '4px', display: isMobile ? 'none' : 'block' }}>
         <div className="mono" style={{
           display: 'grid',
           gridTemplateColumns: '90px 1fr 60px 60px 65px 70px 70px 110px 110px',
@@ -217,8 +224,7 @@ export default function Home() {
       </div>
 
       {/* Mobile cards */}
-      <div style={{ display: 'none' }}
-        ref={el => { if (el) el.style.display = window.innerWidth < 768 ? 'block' : 'none' }}>
+      <div style={{ display: isMobile ? 'block' : 'none' }}>
         {enriched.map(({ flight: f, proc }, i) => (
           <div key={i} className="panel" style={{ borderRadius: '4px', marginBottom: '0.75rem', padding: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
