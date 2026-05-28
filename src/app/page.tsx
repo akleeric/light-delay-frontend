@@ -66,7 +66,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [predicting, setPredicting] = useState(false)
   const [time, setTime] = useState('')
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
   useEffect(() => {
     const tick = () => setTime(new Date().toLocaleTimeString('fr-FR'))
@@ -166,7 +166,7 @@ export default function Home() {
       )}
 
       {/* Desktop table */}
-      <div className="panel table-scroll" style={{ borderRadius: '4px', display: isMobile ? 'none' : 'block' }}>
+      <div className="panel table-scroll" style={{ borderRadius: '4px', display: isMobile === null ? 'none' : isMobile ? 'none' : 'block' }}>
         <div className="mono" style={{
           display: 'grid',
           gridTemplateColumns: '90px 1fr 60px 60px 65px 70px 70px 110px 110px',
@@ -224,7 +224,7 @@ export default function Home() {
       </div>
 
       {/* Mobile cards */}
-      <div style={{ display: isMobile ? 'block' : 'none' }}>
+      <div style={{ display: isMobile === null ? 'none' : isMobile ? 'block' : 'none' }}>
         {enriched.map(({ flight: f, proc }, i) => (
           <div key={i} className="panel" style={{ borderRadius: '4px', marginBottom: '0.75rem', padding: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
