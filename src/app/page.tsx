@@ -94,17 +94,29 @@ export default function Home() {
   }, [])
 
   const runPredictions = async () => {
-    if (processed.length === 0) return
     setPredicting(true)
     try {
+      // 1. Rafraîchir les données avant de prédire
+      const [rawRes, procRes] = await Promise.all([
+        fetch(`${API}/flights/raw`).then(r => r.json()),
+        fetch(`${API}/flights/processed`).then(r => r.json())
+      ])
+      const freshFlights: Flight[] = Array.isArray(rawRes) ? rawRes : []
+      const freshProcessed: Processed[] = Array.isArray(procRes) ? procRes : []
+      setFlights(freshFlights)
+      setProcessed(freshProcessed)
+
+      if (freshProcessed.length === 0) { setPredicting(false); return }
+
+      // 2. Prédire sur les données fraîches
       const res = await fetch(`${API}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flights: processed })
+        body: JSON.stringify({ flights: freshProcessed })
       })
       const data = await res.json()
       const preds: number[] = data.predictions || []
-      setProcessed(prev => prev.map((p, i) => ({ ...p, prediction: preds[i] ?? undefined })))
+      setProcessed(freshProcessed.map((p, i) => ({ ...p, prediction: preds[i] ?? undefined })))
     } catch (e) { console.error(e) }
     setPredicting(false)
   }
